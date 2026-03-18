@@ -1,26 +1,48 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app-root">
+    <AppHeader />
+    <main class="main-content">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </main>
+    <AppFooter />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AppHeader from './components/layout/AppHeader.vue'
+import AppFooter from './components/layout/AppFooter.vue'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  components: { AppHeader, AppFooter },
+  created() {
+    // Restaura sesión admin si hay token guardado en sessionStorage
+    this.restoreAdminSession()
+  },
+  methods: {
+    ...mapActions(['restoreAdminSession'])
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+#app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.fade-enter-active,
+.fade-leave-active { transition: opacity 0.22s ease, transform 0.22s ease; }
+.fade-enter-from   { opacity: 0; transform: translateY(8px); }
+.fade-leave-to     { opacity: 0; transform: translateY(-4px); }
 </style>
