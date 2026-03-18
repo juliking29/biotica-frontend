@@ -9,13 +9,11 @@ const api = axios.create({
   }
 })
 
-// Request interceptor
 api.interceptors.request.use(
   (config) => config,
   (error) => Promise.reject(error)
 )
 
-// Response interceptor
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
